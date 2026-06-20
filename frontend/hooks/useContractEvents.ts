@@ -24,7 +24,7 @@ export interface EventFilter {
 export function useContractEvents(filter: EventFilter) {
   const { session } = useWallet();
   const [events] = useState<ContractEvent[]>([]);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [isListening, setIsListening] = useState(false);
   
   // Derive error from session state
