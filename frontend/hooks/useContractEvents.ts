@@ -30,6 +30,10 @@ export function useContractEvents(filter: EventFilter) {
   // Derive error from session state
   const error = !session ? "Wallet not connected" : null;
 
+  // Stabilize the filter properties to prevent tearing down the interval on every render
+  const { contractId, eventTypes, fromLedger } = filter;
+  const eventTypesKey = eventTypes?.join(",");
+
   useEffect(() => {
     if (!session) {
       return;
@@ -37,7 +41,7 @@ export function useContractEvents(filter: EventFilter) {
 
     // TODO: Implement actual event listening using Stellar Horizon API
     // This should poll for new events or use WebSocket for real-time updates
-    console.log("Starting event listener:", filter);
+    console.log("Starting event listener:", { contractId, eventTypes, fromLedger });
 
     // Mock event listener
     intervalRef.current = setInterval(() => {
@@ -55,7 +59,7 @@ export function useContractEvents(filter: EventFilter) {
       }
       setIsListening(false);
     };
-  }, [session, filter]);
+  }, [session, contractId, eventTypesKey, fromLedger]);
 
   const stopListening = useCallback(() => {
     if (intervalRef.current) {
